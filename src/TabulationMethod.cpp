@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <cmath>
 #include "Conversions.h"
+#include "Column.h"
 
 //should put declarations into a .h file
 int main();
@@ -10,6 +11,8 @@ void getMinterms();
 
 int main() {
 	getMinterms();
+	Column column{};
+
 	return 0;
 }
 

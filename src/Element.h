@@ -15,12 +15,14 @@ class Element {
 		int getMintermInt();
 		std::vector<char> getMintermBinary();
 		bool getIsReduced();
+		unsigned int getGroupNumber();
 
 		Element(unsigned int n);
 		virtual ~Element();
 	private:
 		bool isReduced;
 		unsigned int mintermInt;
+		unsigned int groupNumber; //Number of 1s in the mintermBinary
 		std::vector<char> mintermBinary;
 };
 
