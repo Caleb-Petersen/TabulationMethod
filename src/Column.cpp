@@ -22,7 +22,7 @@ void Column::sortByGroup() {
 	}
 }
 
-std::vector<Column> Column::reduceColumn() {
+Column Column::reduceColumn() {
 	//Reduces the column
 	//Sorts
 	Column reducedColumn{};
@@ -35,20 +35,20 @@ std::vector<Column> Column::reduceColumn() {
 	unsigned int upperBound = 0;
 
 	for(std::size_t i=0; i< this->column.size(); i++) {
-		if(this->column.at(i).groupNumber == currentGroup) {
+		if(this->column.at(i).getGroupNumber() == currentGroup) {
 			//check for reduction possibilities by computing the differences for the lowerBound to the upperBound
 			for(std::size_t j=lowerBound; j<=upperBound; j++) {
 				//compute diff for column.at(i) and column.at(j). If the diff is equal to one,
 				//the is reduced to true and add the new combined element to the reduced column
 			}
-		}else if(this->column.at(i).groupNumber == currentGroup + 1) {
+		}else if(this->column.at(i).getGroupNumber() == currentGroup + 1) {
 			//reset the group and bounds
 			currentGroup += 1;
 			lowerBound = upperBound + 1;
 			upperBound = i-i;
 
 			//compute diff for all elements between the lower and upper bounds and reduce
-		}else if(this->column.at(i).groupNumber > currentGroup + 1) {
+		}else if(this->column.at(i).getGroupNumber() > currentGroup + 1) {
 			//handles missing groups
 			lowerBound = i;
 			upperBound = i;

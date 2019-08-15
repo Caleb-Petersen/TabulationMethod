@@ -7,16 +7,16 @@
 
 //should put declarations into a .h file
 int main();
-void getMinterms();
+std::vector<unsigned int> getMinterms();
 
 int main() {
-	getMinterms();
+	std::vector<unsigned int> minterms = getMinterms();
 	Column column{};
 
 	return 0;
 }
 
-void getMinterms() {
+std::vector<unsigned int> getMinterms() {
 	unsigned int n=0;
 	std::string mintermStr = "";
 	std::vector<unsigned int> minterms;
@@ -31,6 +31,8 @@ void getMinterms() {
 
 	//Convert the string into an array of unsigned integers
 	minterms = parseMinterms(mintermStr);
+
+	return minterms;
 }
 
 

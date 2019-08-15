@@ -15,7 +15,7 @@ class Column {
 		std::vector<Element> column;
 
 		void sortByGroup();
-		std::vector<Column> reduceColumn();
+		Column reduceColumn();
 
 		Column();
 		virtual ~Column();

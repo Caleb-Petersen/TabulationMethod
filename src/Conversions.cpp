@@ -16,7 +16,7 @@ std::vector<unsigned int> parseMinterms (std::string const minterms) {
 
 	for(std::size_t i=0; i<minterms.size(); i++) {
 		if(isdigit(minterms.at(i)) && (int)minterms.at(i) >= 0) {
-			parsedMinterms.push_back(minterms.at(i));
+			parsedMinterms.push_back(minterms.at(i)-'0');
 		}
 	}
 
