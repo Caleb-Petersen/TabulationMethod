@@ -6,6 +6,7 @@
  */
 #include <vector>
 #include "Element.h"
+#include "Conversions.h"
 
 #ifndef COLUMN_H_
 #define COLUMN_H_
@@ -17,7 +18,7 @@ class Column {
 		void sortByGroup();
 		Column reduceColumn();
 
-		Column();
+		Column(std::vector<Element> c);
 		virtual ~Column();
 };
 
