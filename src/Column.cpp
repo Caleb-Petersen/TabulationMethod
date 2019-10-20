@@ -8,68 +8,49 @@
 #include "Column.h"
 
 Column::Column(std::vector<Element> c) {
-	this->column = c;
+	this->columnElements = c;
 }
 
 void Column::sortByGroup() {
 	//insertion sort the column by group
-	for(std::size_t i=0; i< this->column.size(); i++) {
-		for(std::size_t j=i+1; j<this->column.size(); j++) {
-			if(this->column.at(j).getGroupNumber() < this->column.at(i).getGroupNumber()) {
-				std::swap(this->column.at(j), this->column.at(i));
+	for(std::size_t i=0; i< this->columnElements.size(); i++) {
+		for(std::size_t j=i+1; j<this->columnElements.size(); j++) {
+			if(this->columnElements.at(j).getGroupNumber() < this->columnElements.at(i).getGroupNumber()) {
+				std::swap(this->columnElements.at(j), this->columnElements.at(i));
 			}
 		}
 	}
 }
 
 Column Column::reduceColumn() {
-	//Reduces the column
-	//Sorts
 	std::vector<Element> reducedElements;
-	//Sort the column before reducing in case it isn't already sorted
-	this->sortByGroup();
 
-	unsigned int currentGroup = 0;
-	unsigned int lowerBound = 0;
-	unsigned int upperBound = 0;
-	bool columnReduced = false;
+	this->sortByGroup(); //The column has to be sorted in order for reduction to work.
+	unsigned int highestGroupNumber = this->columnElements.at(this->columnElements.size() - 1).getGroupNumber();
 
-	for(std::size_t i=0; i< this->column.size(); i++) {
-		if(this->column.at(i).getGroupNumber() == currentGroup) {
-			//check for reduction possibilities by computing the differences for the lowerBound to the upperBound
-			for(std::size_t j=lowerBound; j<=upperBound; j++) {
-				if(mintermBinaryDiff(this->column.at(i).getMintermBinary(),this->column.at(j).getMintermBinary()) == 1 &&
-						this->column.at(i).getGroupNumber() != this->column.at(j).getGroupNumber()) {
-					//The columns are only reduced if they are in different groups with a difference of 1
-					columnReduced = true;
-					this->column.at(i).setIsReduced(true);
-					this->column.at(j).setIsReduced(true);
+	for(std::size_t group=0; group<highestGroupNumber; group++) {
+		for(std::size_t i=0; i<this->columnElements.size(); i++) {
+			if(this->columnElements.at(i).getGroupNumber() == group) {
+				//Loop through all elements from the current one to the end of the array or until the next group number is reached
+				for(std::size_t j=i+1; (j < this->columnElements.size()) && (this->columnElements.at(j).getGroupNumber() < (group + 2)); j++) {
+					//Reduce the columns if they are in different groups with a difference of 1
+					if(mintermBinaryDiff(this->columnElements.at(i).getMintermBinary(),this->columnElements.at(j).getMintermBinary()) == 1) {
+						std::cout << "Found a diff of 1" << std::endl;
 
-					//combine the minterms and sources for the new element
-					std::vector<char> mB = combineMinterms(this->column.at(i).getMintermBinary(),this->column.at(j).getMintermBinary());
-					std::vector<unsigned int> mS = this->column.at(i).getMintermSources();
+						this->columnElements.at(i).setIsReduced(true);
+						this->columnElements.at(j).setIsReduced(true);
 
-					mS.insert(mS.end(), this->column.at(j).getMintermSources().begin(), this->column.at(j).getMintermSources().end()); //may have shallow copies
+						//combine the minterms and sources for the new element
+						std::vector<char> mB = combineMinterms(this->columnElements.at(i).getMintermBinary(),this->columnElements.at(j).getMintermBinary());
+						std::vector<unsigned int> mS = this->columnElements.at(i).getMintermSources();
 
-					Element element{mB, mS};
-					reducedElements.push_back(element);
+						mS.insert(mS.end(), this->columnElements.at(j).getMintermSources().begin(), this->columnElements.at(j).getMintermSources().end()); //may have shallow copies
+
+						Element element{mB, mS};
+						reducedElements.push_back(element);
+					}
 				}
-
 			}
-		}else if(this->column.at(i).getGroupNumber() == currentGroup + 1) {
-			//reset the group and bounds
-			currentGroup += 1;
-			lowerBound = upperBound + 1;
-			upperBound = i-i;
-
-			//compute diff for all elements between the lower and upper bounds and reduce
-		}else if(this->column.at(i).getGroupNumber() > currentGroup + 1) {
-			//handles missing groups
-			lowerBound = i;
-			upperBound = i;
-			currentGroup = i;
-			// NOTE: this will cause an issue when the next element is of the same group as this current group as it will try to compute
-			// a diff between members of the same group. I suppose diff could only be computed if the groups of elements are equal....
 		}
 	}
 

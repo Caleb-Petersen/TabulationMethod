@@ -25,8 +25,9 @@ int main() {
 	//Create the first column
 	Column column{elements};
 	column.sortByGroup();
+	Column reduced = column.reduceColumn();
 	//Print out to check correctness of elements
-	for(Element e : column.column) {
+	for(Element e : column.columnElements) {
 		std::cout << "Group Number: " << e.getGroupNumber() << std::endl;
 		std::cout << "Minterm value: " << e.getMintermSources().at(0) << std::endl;
 
@@ -37,6 +38,19 @@ int main() {
 		std::cout << std::endl;
 	}
 
+	std::cout << std::endl;
+	std::cout << "Reduced Column" << std::endl;
+	//Print out the reduced one
+	for(Element e : reduced.columnElements) {
+		std::cout << "Group Number: " << e.getGroupNumber() << std::endl;
+		std::cout << "Minterm value: " << e.getMintermSources().at(0) << std::endl;
+
+		std::cout << "Character Array: ";
+		for(char c : e.getMintermBinary()) {
+			std::cout << c;
+		}
+		std::cout << std::endl;
+	}
 	return 0;
 }
 
