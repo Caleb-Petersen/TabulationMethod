@@ -49,7 +49,7 @@ int main() {
 		for(char c : e.getMintermBinary()) {
 			std::cout << c;
 		}
-		std::cout << std::endl;
+		std::cout << std::endl << std::endl;
 	}
 	return 0;
 }

@@ -40,11 +40,14 @@ Column Column::reduceColumn() {
 						this->columnElements.at(i).setIsReduced(true);
 						this->columnElements.at(j).setIsReduced(true);
 
-						//combine the minterms and sources for the new element
+						//Combine the minterm binaries
 						std::vector<char> mB = combineMinterms(this->columnElements.at(i).getMintermBinary(),this->columnElements.at(j).getMintermBinary());
-						std::vector<unsigned int> mS = this->columnElements.at(i).getMintermSources();
 
-						mS.insert(mS.end(), this->columnElements.at(j).getMintermSources().begin(), this->columnElements.at(j).getMintermSources().end()); //may have shallow copies
+						//Combine the minterm sources
+						std::vector<unsigned int> mS = this->columnElements.at(i).getMintermSources();
+						for(int minterm : this->columnElements.at(j).getMintermSources()) {
+							mS.push_back(minterm);
+						}
 
 						Element element{mB, mS};
 						reducedElements.push_back(element);
