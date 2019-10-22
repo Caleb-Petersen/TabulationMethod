@@ -22,7 +22,7 @@ void Column::sortByGroup() {
 	}
 }
 
-Column Column::reduceColumn() {
+Column Column::reduceColumn(bool &reductionComplete) {
 	std::vector<Element> reducedElements;
 
 	this->sortByGroup(); //The column has to be sorted in order for reduction to work.
@@ -35,8 +35,6 @@ Column Column::reduceColumn() {
 				for(std::size_t j=i+1; (j < this->columnElements.size()) && (this->columnElements.at(j).getGroupNumber() < (group + 2)); j++) {
 					//Reduce the columns if they are in different groups with a difference of 1
 					if(mintermBinaryDiff(this->columnElements.at(i).getMintermBinary(),this->columnElements.at(j).getMintermBinary()) == 1) {
-						std::cout << "Found a diff of 1" << std::endl;
-
 						this->columnElements.at(i).setIsReduced(true);
 						this->columnElements.at(j).setIsReduced(true);
 
@@ -57,6 +55,7 @@ Column Column::reduceColumn() {
 		}
 	}
 
+	reductionComplete = reducedElements.size() == 0;
 	return Column(reducedElements);
 }
 

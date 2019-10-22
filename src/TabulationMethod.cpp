@@ -23,34 +23,36 @@ int main() {
 	}
 
 	//Create the first column
-	Column column{elements};
-	column.sortByGroup();
-	Column reduced = column.reduceColumn();
-	//Print out to check correctness of elements
-	for(Element e : column.columnElements) {
-		std::cout << "Group Number: " << e.getGroupNumber() << std::endl;
-		std::cout << "Minterm value: " << e.getMintermSources().at(0) << std::endl;
+	Column initialColumn{elements};
+	std::vector<Column> reducedColumnsList;
+	reducedColumnsList.push_back(initialColumn);
 
-		std::cout << "Character Array: ";
-		for(char c : e.getMintermBinary()) {
-			std::cout << c;
+
+	bool reductionComplete = false;
+	while(!reductionComplete) {
+		Column reducedColumn = reducedColumnsList.at(reducedColumnsList.size() - 1).reduceColumn(reductionComplete);
+		if(!reductionComplete) {
+			reducedColumnsList.push_back(reducedColumn);
 		}
-		std::cout << std::endl;
+	}
+
+	//Print out the column elements that are not reduced
+	for(Column col : reducedColumnsList) {
+		for(Element e : col.columnElements) {
+			if(!e.getIsReduced()) {
+				std::cout << "Group Number: " << e.getGroupNumber() << std::endl;
+				std::cout << "Minterm value: " << e.getMintermSources().at(0) << std::endl;
+
+				std::cout << "Character Array: ";
+				for(char c : e.getMintermBinary()) {
+					std::cout << c;
+				}
+				std::cout << std::endl;
+			}
+		}
 	}
 
 	std::cout << std::endl;
-	std::cout << "Reduced Column" << std::endl;
-	//Print out the reduced one
-	for(Element e : reduced.columnElements) {
-		std::cout << "Group Number: " << e.getGroupNumber() << std::endl;
-		std::cout << "Minterm value: " << e.getMintermSources().at(0) << std::endl;
-
-		std::cout << "Character Array: ";
-		for(char c : e.getMintermBinary()) {
-			std::cout << c;
-		}
-		std::cout << std::endl << std::endl;
-	}
 	return 0;
 }
 
